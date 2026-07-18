@@ -1,8 +1,8 @@
 //! String-related utilities and extension traits.
 #[cfg(feature = "unicode")]
 pub mod ellipsis;
-mod escape_non_printable_posix_ext;
+mod escape;
 
 #[cfg(feature = "unicode")]
 pub use ellipsis::EllipsizeExt;
-pub use escape_non_printable_posix_ext::EscapeNonPrintablePosixExt;
+pub use escape::EscapeNonPrintablePosixExt;
