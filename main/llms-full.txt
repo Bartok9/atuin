@@ -1454,7 +1454,9 @@ auto_sync = true/false
 
 Default: `true`
 
-Configures whether to automatically check for updates.
+Configures whether to automatically check for updates. When enabled, Atuin checks `https://api.atuin.sh` for the latest release at most once per hour, and prints a notice if you're out of date.
+
+Set to `false` to disable. With the update check disabled and sync not set up, Atuin makes no network requests of its own.
 
 ```
 update_check = true/false
@@ -1512,6 +1514,10 @@ autostart = true
 ```
 
 You can customize the priority given to frequency, recency, and frecency scores in this mode. See [the score multipliers section](#score-multipliers) for more information.
+
+Interactive-only modes
+
+The `daemon-fuzzy` and `skim` modes take effect only for interactive TUI searches. Non-interactive `atuin search` commands will treat these modes as `fuzzy` instead.
 
 #### `fuzzy` search syntax
 
@@ -5557,6 +5563,26 @@ This will delete your account, and all history from the remote server. It won't 
 
 We don't currently have a password reset system. As long as you're still logged in on at least one machine, it's safe to delete and re-create your account.
 
+## I'm not using sync — why is Atuin connecting to api.atuin.sh?
+
+That's the update checker. At most once per hour, Atuin checks `https://api.atuin.sh` for the latest release, and lets you know if you're out of date. It's a version lookup — no history or personal data is involved.
+
+To turn it off, add this to `~/.config/atuin/config.toml`:
+
+```
+update_check = false
+```
+
+With the [update check](https://docs.atuin.sh/configuration/config/#update_check) disabled and sync not set up, Atuin makes no network requests of its own.
+
+If you'd rather the code wasn't in the binary at all, build from source without the default features:
+
+```
+cargo build --release --no-default-features --features client,daemon,clipboard
+```
+
+This compiles out the update checker, the sync commands, and AI.
+
 ## I didn't set up sync, and now I have to reinstall my system!
 
 If you have a backup of `~/.local/share/atuin`, you can import it by:
@@ -5581,13 +5607,15 @@ If you don't like Atuin, perhaps one of these works better for you:
 
 Sorry to see you go!
 
-If you used the Atuin installer, you can totally delete it by removing the following
+If you used the Atuin installer, you can totally delete it by following these steps:
 
 1. Delete the `~/.atuin` directory
 1. Delete the `~/.config/atuin` directory
 1. Delete the `~/.local/share/atuin` directory
-1. Remove the line referencing `atuin init` from your shell config
-1. Fish users: delete `~/.config/fish/conf.d/atuin.env.fish` if it exists
+1. Remove the shell integration:
+1. On Bash, remove the lines referencing `atuin init` and `~/.atuin/bin/env` from ~/.profile, ~/.bashrc, and ~/.bash_login. The installer may have installed bash-preexec; if you wish to remove it too, delete ~/.bash-preexec.sh and remove the line referencing it from ~/.bashrc.
+1. On Zsh, remove the lines referencing `atuin init` and `~/.atuin/bin/env` from ~/.zshrc and ~/.zshenv.
+1. On Fish, remove the line referencing `atuin init` from ~/.config/fish/config.fish and delete ~/.config/fish/conf.d/atuin.env.fish.
 
 Otherwise, uninstalling Atuin depends on your system, and how you installed it.
 

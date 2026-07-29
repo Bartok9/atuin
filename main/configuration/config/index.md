@@ -66,7 +66,9 @@ auto_sync = true/false
 
 Default: `true`
 
-Configures whether to automatically check for updates.
+Configures whether to automatically check for updates. When enabled, Atuin checks `https://api.atuin.sh` for the latest release at most once per hour, and prints a notice if you're out of date.
+
+Set to `false` to disable. With the update check disabled and sync not set up, Atuin makes no network requests of its own.
 
 ```
 update_check = true/false
@@ -124,6 +126,10 @@ autostart = true
 ```
 
 You can customize the priority given to frequency, recency, and frecency scores in this mode. See [the score multipliers section](#score-multipliers) for more information.
+
+Interactive-only modes
+
+The `daemon-fuzzy` and `skim` modes take effect only for interactive TUI searches. Non-interactive `atuin search` commands will treat these modes as `fuzzy` instead.
 
 #### `fuzzy` search syntax
 
